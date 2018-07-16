@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ArmStarter</string>
+    <string name="app_LeftMenu_f1">Тренировка</string>
+    <string name="action_settings">Настройки</string>
+    <string name="app_stats">Статистика</string>
+    <string name="action_about">О проекте</string>
+    <string name="app_info">Узнать больше</string>
+    <string name="app_exit">Выход</string>
+</resources>
