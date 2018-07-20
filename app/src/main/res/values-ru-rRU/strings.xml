@@ -7,4 +7,6 @@
     <string name="action_about">О проекте</string>
     <string name="app_info">Узнать больше</string>
     <string name="app_exit">Выход</string>
+    <string name="nav_header_subtitle" translatable="false">Все в твоих руках!</string>
+    <string name="app_maintext">Твои данные</string>
 </resources>

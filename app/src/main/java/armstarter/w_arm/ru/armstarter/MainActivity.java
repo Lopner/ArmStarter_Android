@@ -12,6 +12,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
+
+
+//import com.jjoe64.graphview.BarGraphView;
+import com.jjoe64.graphview.GraphView;
+//import com.jjoe64.graphview.GraphViewSeries;
+//import com.jjoe64.graphview.GraphView.GraphViewData;
+//import com.jjoe64.graphview.LineGraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
+import com.jjoe64.graphview.LegendRenderer;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -23,14 +35,14 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -43,7 +55,36 @@ public class MainActivity extends AppCompatActivity
 
 
         int i = 1;
+        // Линейный график
+        GraphView graph = (GraphView) findViewById(R.id.graph);
+        graph.getLegendRenderer().setVisible(true);
+        graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
+                new DataPoint(0, 125),
+                new DataPoint(1, 115),
+                new DataPoint(2, 90),
+                new DataPoint(3, 228),
+                new DataPoint(4, 150)
+        });
+        series.setTitle("Реакция");
 
+        graph.addSeries(series);
+
+        LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(new DataPoint[] {
+                new DataPoint(0, 300),
+                new DataPoint(1, 250),
+                new DataPoint(2, 100),
+                new DataPoint(3, 120),
+                new DataPoint(4, 200)
+        });
+
+        GridLabelRenderer gridLabel = graph.getGridLabelRenderer();
+        gridLabel.setHorizontalAxisTitle("repeats");
+       // gridLabel.setVerticalAxisTitle("msec");
+        int RGB_series2 = android.graphics.Color.rgb(250, 140, 90);
+        series2.setColor(RGB_series2);
+        series2.setTitle("Импульс");
+        graph.addSeries(series2);
     }
 
     @Override
