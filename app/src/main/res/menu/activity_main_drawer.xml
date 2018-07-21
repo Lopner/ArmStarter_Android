@@ -5,15 +5,15 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_training"
             android:icon="@drawable/ic_fitness"
             android:title="@string/app_LeftMenu_f1" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_statistic"
             android:icon="@drawable/ic_assessment_black_24dp"
             android:title="@string/app_stats" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/action_settings" />
     </group>
@@ -21,7 +21,7 @@
     <item android:title="@string/app_info">
         <menu>
             <item
-                android:id="@+id/nav_share"
+                android:id="@+id/nav_about"
                 android:icon="@drawable/ic_home_black_24dp"
                 android:title="@string/action_about" />
             <item

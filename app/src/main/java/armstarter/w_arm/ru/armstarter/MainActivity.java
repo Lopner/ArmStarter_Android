@@ -1,8 +1,10 @@
 package armstarter.w_arm.ru.armstarter;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -125,17 +127,20 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_training) {
+            findViewById(R.id.main_container).setVisibility(View.VISIBLE);
+            findViewById(R.id.main_setting).setVisibility(View.GONE);
+        } else if (id == R.id.nav_statistic) {
 
        // } else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_settings) {
+            // Handle the camera action
+            findViewById(R.id.main_container).setVisibility(View.GONE);
+            findViewById(R.id.main_setting).setVisibility(View.VISIBLE);
+        } else if (id == R.id.nav_about) {
 
-        } else if (id == R.id.nav_share) {
-
-        //} else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_exit) {
 
         }
 
