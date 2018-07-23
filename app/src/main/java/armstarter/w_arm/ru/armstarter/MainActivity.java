@@ -15,6 +15,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 //import com.jjoe64.graphview.BarGraphView;
@@ -27,8 +30,34 @@ import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    List ListLayout;
+    TextView NubersOfRepeat;
+    SeekBar sk;
+    void InitListLayoit(){
+        ListLayout = new ArrayList();
+        ListLayout.add(R.id.main_container);
+        ListLayout.add(R.id.main_setting);
+    }
+
+    void SetOnlyOneLayoutVisible(int v){
+        if (ListLayout.contains(v)){
+            for (int i = 0; i < ListLayout.size(); i++) {
+                findViewById((int)ListLayout.get(i)).setVisibility(View.GONE);
+            }
+
+            for (int i = 0; i < ListLayout.size(); i++) {
+                if (v == (int)ListLayout.get(i)) {
+                    findViewById((int) ListLayout.get(i)).setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +65,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        NubersOfRepeat = (TextView) findViewById(R.id.textView_RepeatNumbers);
+        InitListLayoit();
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +118,35 @@ public class MainActivity extends AppCompatActivity
         series2.setColor(RGB_series2);
         series2.setTitle("Импульс");
         graph.addSeries(series2);
+
+
+
+        sk=(SeekBar) findViewById(R.id.seekBar);
+        sk.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+                int my_progress = sk.getProgress();
+                NubersOfRepeat.setText(my_progress);
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
+                // TODO Auto-generated method stub
+
+               // Toast.makeText(getApplicationContext(), String.valueOf(progress),Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+
+
+
     }
 
     @Override
@@ -125,19 +185,21 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+
+
+
+
         int id = item.getItemId();
 
         if (id == R.id.nav_training) {
-            findViewById(R.id.main_container).setVisibility(View.VISIBLE);
-            findViewById(R.id.main_setting).setVisibility(View.GONE);
+            SetOnlyOneLayoutVisible(R.id.main_container);
         } else if (id == R.id.nav_statistic) {
 
        // } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_settings) {
             // Handle the camera action
-            findViewById(R.id.main_container).setVisibility(View.GONE);
-            findViewById(R.id.main_setting).setVisibility(View.VISIBLE);
+            SetOnlyOneLayoutVisible(R.id.main_setting);
         } else if (id == R.id.nav_about) {
 
         } else if (id == R.id.nav_exit) {
