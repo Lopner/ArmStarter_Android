@@ -28,5 +28,13 @@
         android:id="@+id/main_setting"
         layout="@layout/content_setting"
         android:visibility="gone"/>
+    <include
+        android:id="@+id/main_statistic"
+        layout="@layout/content_statistic"
+        android:visibility="gone"/>
+    <include
+        android:id="@+id/main_about"
+        layout="@layout/content_about"
+        android:visibility="gone"/>
 
 </android.support.design.widget.CoordinatorLayout>

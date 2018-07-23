@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity
         ListLayout = new ArrayList();
         ListLayout.add(R.id.main_container);
         ListLayout.add(R.id.main_setting);
+        ListLayout.add(R.id.main_statistic);
+        ListLayout.add(R.id.main_about);
     }
 
     void SetOnlyOneLayoutVisible(int v){
@@ -128,7 +130,7 @@ public class MainActivity extends AppCompatActivity
             public void onStopTrackingTouch(SeekBar seekBar) {
                 // TODO Auto-generated method stub
                 int my_progress = sk.getProgress();
-                NubersOfRepeat.setText(my_progress);
+                NubersOfRepeat.setText(Integer.toString(my_progress));
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -194,20 +196,22 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_training) {
             SetOnlyOneLayoutVisible(R.id.main_container);
         } else if (id == R.id.nav_statistic) {
-
-       // } else if (id == R.id.nav_slideshow) {
-
+            SetOnlyOneLayoutVisible(R.id.main_statistic);
         } else if (id == R.id.nav_settings) {
             // Handle the camera action
             SetOnlyOneLayoutVisible(R.id.main_setting);
         } else if (id == R.id.nav_about) {
-
+            SetOnlyOneLayoutVisible(R.id.main_about);
         } else if (id == R.id.nav_exit) {
-
+            goExit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    void goExit(){
+
     }
 }
