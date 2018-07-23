@@ -11,7 +11,7 @@
     <TextView
         android:id="@+id/textViewTop100"
         android:layout_width="wrap_content"
-        android:layout_height="18dp"
+        android:layout_height="19dp"
         android:text="@string/app_top100"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
