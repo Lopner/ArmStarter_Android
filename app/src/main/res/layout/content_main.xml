@@ -9,12 +9,115 @@
     tools:showIn="@layout/app_bar_main">
 
     <TextView
+        android:id="@+id/textView_reaction7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:background="@android:color/holo_purple"
+        android:ellipsize="start"
+        android:text="125"
+        android:textColor="@color/colorAccent"
+        android:typeface="serif"
+        app:layout_constraintTop_toTopOf="@+id/textView3"
+        tools:layout_editor_absoluteX="281dp" />
+
+    <TextView
+        android:id="@+id/textView_reaction8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:background="@color/ic_launcher_background_min"
+        android:ellipsize="start"
+        android:text="125"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="10sp"
+        app:layout_constraintTop_toTopOf="@+id/textView3"
+        tools:layout_editor_absoluteX="250dp" />
+
+    <TextView
+        android:id="@+id/textView_reaction9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:background="@color/ic_launcher_background_max"
+        android:ellipsize="start"
+        android:text="125"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="10sp"
+        app:layout_constraintTop_toTopOf="@+id/textView3"
+        tools:layout_editor_absoluteX="305dp" />
+
+    <TextView
+        android:id="@+id/textView_power2"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_marginTop="20dp"
+
+        android:text="@string/app_maintext3"
+        app:layout_constraintHorizontal_bias="0.796"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_reaction4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@android:color/holo_purple"
+        android:ellipsize="start"
+        android:text="125"
+        android:textColor="@color/colorAccent"
+        android:typeface="serif"
+        app:layout_constraintTop_toTopOf="@+id/textView3"
+        tools:layout_editor_absoluteX="160dp" />
+
+    <TextView
+        android:id="@+id/textView_reaction5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@color/ic_launcher_background_min"
+        android:ellipsize="start"
+        android:text="125"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="10sp"
+        app:layout_constraintTop_toTopOf="@+id/textView3"
+        tools:layout_editor_absoluteX="129dp" />
+
+    <TextView
+        android:id="@+id/textView_reaction6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@color/ic_launcher_background_max"
+        android:ellipsize="start"
+        android:text="125"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="10sp"
+        app:layout_constraintTop_toTopOf="@+id/textView3"
+        tools:layout_editor_absoluteX="184dp" />
+
+    <TextView
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="18dp"
         android:layout_marginTop="16dp"
-        android:text="@string/app_maintext"
 
-        app:layout_constraintHorizontal_bias="0.502"
+        android:text="@string/app_maintext"
+        app:layout_constraintHorizontal_bias="0.075"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_power"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_marginTop="16dp"
+
+        android:text="@string/app_maintext2"
+        app:layout_constraintHorizontal_bias="0.443"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -53,5 +156,50 @@
         android:text="RepeatNubers"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/graph" />
+
+    <android.support.constraint.Group
+        android:id="@+id/group2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="textView_reaction,textView_reaction2,textView_reaction3" />
+
+    <TextView
+        android:id="@+id/textView_reaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@android:color/holo_purple"
+        android:ellipsize="start"
+        android:text="125"
+        android:textColor="@color/colorAccent"
+        android:typeface="serif"
+        app:layout_constraintTop_toTopOf="@+id/textView3"
+        tools:layout_editor_absoluteX="40dp" />
+
+    <TextView
+        android:id="@+id/textView_reaction2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@color/ic_launcher_background_min"
+        android:ellipsize="start"
+        android:text="125"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="10sp"
+        app:layout_constraintTop_toTopOf="@+id/textView3"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <TextView
+        android:id="@+id/textView_reaction3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@color/ic_launcher_background_max"
+        android:ellipsize="start"
+        android:text="125"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="10sp"
+        app:layout_constraintTop_toTopOf="@+id/textView3"
+        tools:layout_editor_absoluteX="72dp" />
 
 </android.support.constraint.ConstraintLayout>

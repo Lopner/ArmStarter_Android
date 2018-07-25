@@ -7,6 +7,8 @@
     <string name="action_about">О проекте</string>
     <string name="app_info">Узнать больше</string>
     <string name="app_exit">Выход</string>
-    <string name="app_maintext">Твои данные</string>
+    <string name="app_maintext">Время реакции</string>
     <string name="nav_header_subtitle">все в втоих руках!</string>
+    <string name="app_maintext2">Удельная мощность</string>
+    <string name="app_maintext3">Время движения</string>
 </resources>

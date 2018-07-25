@@ -10,7 +10,9 @@
     <string name="action_about">About</string>
     <string name="app_info">Information</string>
     <string name="app_exit">Exit</string>
-    <string name="app_maintext">Your armwrestling data</string>
+    <string name="app_maintext">Reaction</string>
     <string name="app_top100" translatable="false">Top 100</string>
     <string name="nav_header_subtitle">all in your hands</string>
+    <string name="app_maintext2">Power</string>
+    <string name="app_maintext3">motion time</string>
 </resources>
