@@ -81,8 +81,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_repeat_black_24dp" />
-                            <entry key="sourceFile" value="C:\Users\Monster" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="ic_reaction_time" />
+                            <entry key="sourceFile" value="C:\MonsterPc_Documents\AndroidPr\reaction_time.svg" />
                           </map>
                         </option>
                       </PersistentState>

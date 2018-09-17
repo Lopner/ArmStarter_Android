@@ -46,40 +46,51 @@
 
                 <TextView
                     android:id="@+id/textView_reaction7"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="#A64B00"
+                    android:background="@drawable/gradtextview2"
                     android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="2dp"
                     android:text="125"
                     android:textColor="@color/colorAccent"
                     android:typeface="serif"></TextView>
 
                 <TextView
                     android:id="@+id/textView_power2"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_weight="1"
+                    android:background="@drawable/ic_reaction_time"
                     android:gravity="center" />
 
                 <TextView
                     android:id="@+id/textView_reaction9"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="#008500"
+                    android:background="@drawable/gradtextview3"
                     android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
                     android:text="125"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textSize="10sp" />
 
                 <TextView
                     android:id="@+id/textView_reaction8"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="#A60000"
+                    android:background="@drawable/gradtextview5"
                     android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
                     android:text="125"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textSize="10sp" />
@@ -94,44 +105,58 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textView_reaction7"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/ramkatextview"
                     android:gravity="center"
+                    android:paddingLeft="25dp"
+                    android:paddingTop="4dp"
+                    android:paddingRight="25dp"
+                    android:paddingBottom="4dp"
                     android:text="125"
                     android:textColor="@color/colorAccent"
                     android:typeface="serif"></TextView>
 
                 <TextView
                     android:id="@+id/textView_power"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_weight="1"
+                    android:background="@drawable/ic_power_time"
                     android:gravity="center" />
 
                 <TextView
                     android:id="@+id/textView_reaction"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="#269926"
+                    android:background="@drawable/gradtextview3"
                     android:gravity="center"
+                    android:paddingLeft="14dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="14dp"
                     android:text="125"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textSize="10sp" />
 
                 <TextView
                     android:id="@+id/textView_reaction2"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="#BF3030"
+                    android:background="@drawable/gradtextview6"
                     android:gravity="center"
+                    android:paddingLeft="14dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="14dp"
                     android:text="125"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textSize="10sp" />
@@ -147,44 +172,54 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textView_reaction7"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/gradtextview"
+                    android:background="@drawable/gradtextview2"
                     android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="2dp"
                     android:text="125"
                     android:textColor="@color/colorAccent"
                     android:typeface="serif"></TextView>
 
                 <TextView
                     android:id="@+id/textView_power3"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/ic_motion_time"
                     android:layout_weight="1"
                     android:gravity="center" />
 
                 <TextView
                     android:id="@+id/textView_reaction4"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="#00CC00"
+                    android:background="@drawable/gradtextview3"
                     android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
                     android:text="125"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textSize="10sp" />
 
                 <TextView
                     android:id="@+id/textView_reaction3"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="#FF0000"
+                    android:background="@drawable/gradtextview5"
                     android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
                     android:text="125"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textSize="10sp" />
