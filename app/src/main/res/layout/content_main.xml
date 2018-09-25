@@ -260,18 +260,17 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <SeekBar
-                android:id="@+id/seekBar"
-                style="@style/Widget.AppCompat.SeekBar.Discrete"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/graph"
-                android:layout_alignLeft="@id/graph"
-                android:layout_marginBottom="16dp"
-                android:max="20"
-
-                android:progress="1"
-                android:thumb="@drawable/ic_repeat_black_24dp" />
+            <TextView
+                android:id="@+id/textView_RepeatNumbers"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/seekBar"
+                android:layout_alignLeft="@id/seekBar"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/ramkatextview_repeats"
+                android:padding="10dp"
+                android:textAlignment="center"
+                android:text="0" />
         </LinearLayout>
 
         <LinearLayout
@@ -284,15 +283,22 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/textView_RepeatNumbers"
-                android:layout_width="wrap_content"
-                android:layout_height="25dp"
-                android:layout_below="@id/seekBar"
-                android:layout_alignLeft="@id/seekBar"
+            <SeekBar
+                android:id="@+id/seekBar"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/graph"
+                android:layout_alignLeft="@id/graph"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="10dp"
 
-                android:text="RepeatNubers" />
+                android:max="20"
+                android:progress="1"
+                android:thumb="@drawable/ic_repeat_black_24dp" />
         </LinearLayout>
+
+
 
 
         <!--CONTAINER ITEMS-->

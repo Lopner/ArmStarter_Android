@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -14,8 +15,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +38,8 @@ import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +70,9 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
+
+
+    String[] counrty_data = {"Rus", "Ukr", "UK", "Can", "Bra"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,11 +114,22 @@ public class MainActivity extends AppCompatActivity
                 new DataPoint(3, 228),
                 new DataPoint(4, 150)
         });
-        series.setTitle("Реакция");
-
+        series.setTitle("t");
         graph.addSeries(series);
 
-        LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(new DataPoint[] {
+        LineGraphSeries<DataPoint> series2 = new LineGraphSeries<DataPoint>(new DataPoint[] {
+                new DataPoint(0, 500),
+                new DataPoint(1, 10),
+                new DataPoint(2, 0),
+                new DataPoint(3, 115),
+                new DataPoint(4, 200)
+        });
+        series2.setTitle("Мощность");
+        int RGB_series2 = android.graphics.Color.rgb(200, 100, 90);
+        series2.setColor(RGB_series2);
+        graph.addSeries(series2);
+
+        LineGraphSeries<DataPoint> series3 = new LineGraphSeries<>(new DataPoint[] {
                 new DataPoint(0, 300),
                 new DataPoint(1, 250),
                 new DataPoint(2, 100),
@@ -116,10 +140,86 @@ public class MainActivity extends AppCompatActivity
         GridLabelRenderer gridLabel = graph.getGridLabelRenderer();
         gridLabel.setHorizontalAxisTitle("repeats");
        // gridLabel.setVerticalAxisTitle("msec");
-        int RGB_series2 = android.graphics.Color.rgb(250, 140, 90);
-        series2.setColor(RGB_series2);
-        series2.setTitle("Импульс");
-        graph.addSeries(series2);
+        int RGB_series3 = android.graphics.Color.rgb(250, 140, 90);
+        series3.setColor(RGB_series3);
+        series3.setTitle("Реакция");
+        graph.addSeries(series3);
+
+
+        ///////
+
+/*
+        TableLayout tb = (TableLayout)findViewById(R.id.ratingtable);
+        for (int i1 = 0; i1 < 37; i1++) {
+
+            TableRow row= new TableRow(this);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+            lp.gravity = Gravity.CENTER;
+            row.setLayoutParams(lp);
+
+
+          //  LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+           // params.setMargins(5,5,5,5);
+
+            TextView txtsample1 = new TextView(this);
+            txtsample1.setText(String.valueOf(i1)+".");
+           // txtsample1.setLayoutParams(params);
+
+            TextView txtsample2 = new TextView(this);
+            txtsample2.setText("Mister I. A.");
+          //  txtsample2.setLayoutParams(params);
+
+
+            TextView txtsample3 = new TextView(this);
+            double newDouble = new BigDecimal(0.065*i1).setScale(3, RoundingMode.UP).doubleValue();
+            txtsample3.setText(String.valueOf(newDouble) + " ms");
+           // txtsample3.setLayoutParams(params);
+
+
+            TextView txtsample4 = new TextView(this);
+            txtsample4.setText("МС");
+            //txtsample4.setLayoutParams(params);
+
+            row.addView(txtsample1);
+            row.addView(txtsample2);
+            row.addView(txtsample3);
+            row.addView(txtsample4);
+            tb.addView(row,i1);
+        }
+
+        /////////
+
+
+*/
+
+
+
+
+//выпадающий список
+
+        // адаптер
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, counrty_data);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        spinner.setAdapter(adapter);
+        // заголовок
+        spinner.setPrompt("Title");
+        // выделяем элемент
+        spinner.setSelection(2);
+        // устанавливаем обработчик нажатия
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                // показываем позиция нажатого элемента
+                Toast.makeText(getBaseContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
+
 
 
 
