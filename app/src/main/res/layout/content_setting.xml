@@ -43,6 +43,23 @@
                     android:layout_height="match_parent"
                     android:gravity="center">
 
+                    <TextView
+                        android:id="@+id/textView26"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Разряд" />
+
+                    <Spinner
+                        android:id="@+id/sporttitle_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"></Spinner>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
+
                     <EditText
                         android:id="@+id/editText"
                         android:layout_width="wrap_content"
@@ -61,7 +78,7 @@
                         android:id="@+id/switch1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Switch" />
+                        android:text="App sound" />
                 </TableRow>
 
                 <TableRow
@@ -73,19 +90,7 @@
                         android:id="@+id/switch2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Switch" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
-
-                    <Switch
-                        android:id="@+id/switch3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Switch" />
+                        android:text="Clear app cash" />
                 </TableRow>
 
                 <TableRow
@@ -97,7 +102,8 @@
                         android:id="@+id/checkBox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="CheckBox" />
+                        android:layout_marginTop="15dp"
+                        android:text="Dark Theme" />
                 </TableRow>
 
                 <TableRow
@@ -107,28 +113,29 @@
 
                     <RadioGroup
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp">
 
                         <RadioButton
                             android:id="@+id/radioButton3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="RadioButton" />
+                            android:text="Standart trainig" />
 
                         <RadioButton
                             android:id="@+id/radioButton2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="RadioButton" />
+                            android:text="Crazy trainig" />
 
                         <RadioButton
                             android:id="@+id/radioButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="RadioButton" />
+                            android:text="Laratt trainig" />
 
                     </RadioGroup>
                 </TableRow>

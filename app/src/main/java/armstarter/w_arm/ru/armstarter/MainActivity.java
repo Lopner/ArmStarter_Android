@@ -1,9 +1,12 @@
 package armstarter.w_arm.ru.armstarter;
 
 import android.content.Context;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Xml;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,10 +41,29 @@ import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -73,11 +95,94 @@ public class MainActivity extends AppCompatActivity
 
 
     String[] counrty_data = {"Rus", "Ukr", "UK", "Can", "Bra"};
+    String[] Sport_title_data = {"ЗМС", "МСМК", "МС", "КМС", "1 разряд", "б/р"};
+
+    class MyDownloadTask extends AsyncTask<String,String,String>
+    {
+
+        @Override
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            String resultString = "";
+
+            try {
+
+                String myURL="http://armstarter.w-arm.ru/getdatafromw-arm.php";
+                String parammetrs = "param1=1&param2=XXX";
+                byte[] data = null;
+                InputStream is = null;
+                try {
+                    URL url = new URL(myURL);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("POST");
+                    conn.setDoOutput(true);
+                    conn.setDoInput(true);
+
+                    conn.setRequestProperty("Content-Length", "" + Integer.toString(parammetrs.getBytes().length));
+                    OutputStream os = conn.getOutputStream();
+                    data = parammetrs.getBytes("UTF-8");
+                    os.write(data);
+                    data = null;
+
+                    conn.connect();
+                    int responseCode= conn.getResponseCode();
+
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                    if (responseCode == 200) {
+                        is = conn.getInputStream();
+
+                        byte[] buffer = new byte[8192]; // Такого вот размера буфер
+                        // Далее, например, вот так читаем ответ
+                        int bytesRead;
+                        while ((bytesRead = is.read(buffer)) != -1) {
+                            baos.write(buffer, 0, bytesRead);
+                        }
+                        data = baos.toByteArray();
+                        resultString = new String(data, "UTF-8");
+                    } else {
+                    }
+
+
+
+                } catch (MalformedURLException e) {
+
+                    resultString = "MalformedURLException:" + e.getMessage();
+                } catch (IOException e) {
+
+                    resultString = "IOException:" + e.getMessage();
+                } catch (Exception e) {
+                    resultString = "Exception:" + e.getMessage();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return resultString;
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            // dismiss progress dialog and update ui
+        }
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        new MyDownloadTask().execute();
+
+
+
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         NubersOfRepeat = (TextView) findViewById(R.id.textView_RepeatNumbers);
@@ -219,6 +324,32 @@ public class MainActivity extends AppCompatActivity
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
+
+
+
+        // адаптер
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Sport_title_data);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        Spinner spinner2 = (Spinner) findViewById(R.id.sporttitle_spinner);
+        spinner2.setAdapter(adapter2);
+        // заголовок
+        spinner2.setPrompt("Title");
+        // выделяем элемент
+        spinner2.setSelection(2);
+        // устанавливаем обработчик нажатия
+        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                // показываем позиция нажатого элемента
+                Toast.makeText(getBaseContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
+
 
 
 
