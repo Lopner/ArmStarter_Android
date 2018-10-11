@@ -1,12 +1,16 @@
 package armstarter.w_arm.ru.armstarter;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.Xml;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -40,6 +45,8 @@ import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -68,9 +75,14 @@ import javax.net.ssl.HttpsURLConnection;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+
+
     List ListLayout;
     TextView NubersOfRepeat;
     SeekBar sk;
+
+
+
     void InitListLayoit(){
         ListLayout = new ArrayList();
         ListLayout.add(R.id.main_container);
@@ -97,6 +109,11 @@ public class MainActivity extends AppCompatActivity
     String[] counrty_data = {"Rus", "Ukr", "UK", "Can", "Bra"};
     String[] Sport_title_data = {"ЗМС", "МСМК", "МС", "КМС", "1 разряд", "б/р"};
 
+
+    void DrawTop100(JSONObject jobj){
+        //бновить список участников
+    }
+
     class MyDownloadTask extends AsyncTask<String,String,String>
     {
 
@@ -112,7 +129,7 @@ public class MainActivity extends AppCompatActivity
             try {
 
                 String myURL="http://armstarter.w-arm.ru/getdatafromw-arm.php";
-                String parammetrs = "param1=1&param2=XXX";
+                String parammetrs = "email=forder-rv@mail.ru&param2=XXX";
                 byte[] data = null;
                 InputStream is = null;
                 try {
@@ -144,6 +161,19 @@ public class MainActivity extends AppCompatActivity
                         }
                         data = baos.toByteArray();
                         resultString = new String(data, "UTF-8");
+
+                        try {
+                            JSONObject obj = new JSONObject(resultString);
+                            DrawTop100(obj);
+                            Log.d("My App", obj.toString());
+                        } catch (Throwable t) {
+                            Log.e("My App", "Could not parse malformed JSON: \"" + resultString + "\"");
+                        }
+
+
+
+
+
                     } else {
                     }
 
@@ -171,13 +201,38 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void setMargins (View view, int left, int top, int right, int bottom) {
+        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            p.setMargins(left, top, right, bottom);
+            view.requestLayout();
+        }
+    }
+    private int getmarginDP(Context contecxt, int dpValue /*margin in dips*/){
+        float d = contecxt.getResources().getDisplayMetrics().density;
+        return (int)(dpValue * d); // margin in pixels
+    }
 
+    /**
+     * This method converts dp unit to equivalent pixels, depending on device density.
+     *
+     * @param dp A value in dp (density independent pixels) unit. Which we need to convert into pixels
+     * @param context Context to get resources and device specific display metrics
+     * @return A float value to represent px equivalent to dp depending on device density
+     */
+    public static float convertDpToPixel(float dp, Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return px;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         new MyDownloadTask().execute();
+
 
 
 
@@ -251,37 +306,65 @@ public class MainActivity extends AppCompatActivity
         graph.addSeries(series3);
 
 
-        ///////
+        /////// рейтинг
 
-/*
+
         TableLayout tb = (TableLayout)findViewById(R.id.ratingtable);
+
+        TableRow.LayoutParams TableRow_LP = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+       // View HorizontalDiveder =  (View)findViewById(R.id.rowdevider);
+
+
+        LinearLayout.LayoutParams paramsDiveder = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        float indention = convertDpToPixel(20, this);
+        paramsDiveder.setMargins((int)indention, 0, (int)indention, 0);
+
+
+
+
+
         for (int i1 = 0; i1 < 37; i1++) {
 
-            TableRow row= new TableRow(this);
-            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
-            lp.gravity = Gravity.CENTER;
-            row.setLayoutParams(lp);
+
+
+            View diveder = (View)getLayoutInflater().inflate(R.layout.diveder, null);
+           // diveder.setLayoutParams(paramsDiveder);
+           // setMargins(diveder, 20,0,20,0);
+            TableRow row= (TableRow)getLayoutInflater().inflate(R.layout.tableow_statd, null);
+           // row.setLayoutParams(TableRow_LP);
+            LinearLayout vertLinearLay = new LinearLayout(this);
+            vertLinearLay.setOrientation(LinearLayout.VERTICAL);
+
+            vertLinearLay.addView(diveder);
+
 
 
           //  LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
            // params.setMargins(5,5,5,5);
 
-            TextView txtsample1 = new TextView(this);
+
+            TextView txtsample1 = (TextView) getLayoutInflater().inflate(R.layout.tableow_tx1, null);
             txtsample1.setText(String.valueOf(i1)+".");
            // txtsample1.setLayoutParams(params);
 
             TextView txtsample2 = new TextView(this);
+            txtsample2.setLayoutParams(TableRow_LP);
             txtsample2.setText("Mister I. A.");
           //  txtsample2.setLayoutParams(params);
 
 
             TextView txtsample3 = new TextView(this);
             double newDouble = new BigDecimal(0.065*i1).setScale(3, RoundingMode.UP).doubleValue();
+            txtsample3.setLayoutParams(TableRow_LP);
             txtsample3.setText(String.valueOf(newDouble) + " ms");
            // txtsample3.setLayoutParams(params);
 
 
             TextView txtsample4 = new TextView(this);
+            txtsample4.setLayoutParams(TableRow_LP);
             txtsample4.setText("МС");
             //txtsample4.setLayoutParams(params);
 
@@ -289,13 +372,16 @@ public class MainActivity extends AppCompatActivity
             row.addView(txtsample2);
             row.addView(txtsample3);
             row.addView(txtsample4);
-            tb.addView(row,i1);
+
+            tb.addView(row);
+            tb.addView(vertLinearLay);
+            vertLinearLay.setLayoutParams(paramsDiveder);
         }
 
         /////////
 
 
-*/
+
 
 
 
