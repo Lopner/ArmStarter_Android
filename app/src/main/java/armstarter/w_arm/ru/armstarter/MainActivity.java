@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity
     TextView NubersOfRepeat;
     SeekBar sk;
     public static final String HTTP_RESPONSE = "HTTP_RESPONSE";
-
+    List<Map<String, String>> RatingOfPeople = new ArrayList<>();
 
     void InitListLayoit(){
         ListLayout = new ArrayList();
@@ -291,15 +291,63 @@ public class MainActivity extends AppCompatActivity
         paramsDiveder.setMargins((int)indention, 0, (int)indention, 0);
 
 
+
+        int intkey = 0;
         try {
+            RatingOfPeople.clear();
             Iterator<String> temp = json_data.keys();
+
+
             while (temp.hasNext()) {
+                //читаем новою строку
                 String key = temp.next();
-                Object value = json_data.get(key);
+
+                Map<String, String> LineStr = new HashMap<String, String>();
+
+                JSONObject j_value = (JSONObject)json_data.get(key);
+                Iterator<String> temp2_keys = j_value.keys();
+
+                while(temp2_keys.hasNext()) {
+                    String key_2 = temp2_keys.next();
+                    String param = (String)j_value.get(key_2) ;
+                    LineStr.put(key_2, param);
+
+
+
+                }
+
+                RatingOfPeople.add(LineStr);
+
+
+
+
+               // while(temp2.hasNext()){
+
+                    //заполняем данные строки (все столбцы)
+                   // String key2 = temp2.next();
+                  //  String value2 = (String)json_data.get(key2);
+
+                   // LineStr.put(key2, value2);
+
+                //}
+               // dataS.add(intkey, LineStr);
+                intkey++;
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        //перебираем строки
+        for(Map<String, String> item : RatingOfPeople){
+            String surname = item.get("surname");
+            Double movement_time = Double.parseDouble(item.get("movement_time"));
+            Double specific_power = Double.parseDouble(item.get("specific_power"));
+            Double reaktion_time = Double.parseDouble(item.get("reaktion_time"));
+
+            // вывод в таблицу
+
+        }
+
 
         for (int i1 = 1; i1 < 37; i1++) {
 
