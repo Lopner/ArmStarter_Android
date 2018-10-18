@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -291,8 +292,7 @@ public class MainActivity extends AppCompatActivity
         paramsDiveder.setMargins((int)indention, 0, (int)indention, 0);
 
 
-
-        int intkey = 0;
+        //Читаем Json объект
         try {
             RatingOfPeople.clear();
             Iterator<String> temp = json_data.keys();
@@ -317,97 +317,76 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 RatingOfPeople.add(LineStr);
-
-
-
-
-               // while(temp2.hasNext()){
-
-                    //заполняем данные строки (все столбцы)
-                   // String key2 = temp2.next();
-                  //  String value2 = (String)json_data.get(key2);
-
-                   // LineStr.put(key2, value2);
-
-                //}
-               // dataS.add(intkey, LineStr);
-                intkey++;
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        //перебираем строки
+
+
+
+
+        //перебираем прочитаные результаты пользователей
+
+        int i1 = 1; // индекс строки для вывода
         for(Map<String, String> item : RatingOfPeople){
             String surname = item.get("surname");
             Double movement_time = Double.parseDouble(item.get("movement_time"));
             Double specific_power = Double.parseDouble(item.get("specific_power"));
             Double reaktion_time = Double.parseDouble(item.get("reaktion_time"));
+            String Flag = item.get("short_abberation");
 
             // вывод в таблицу
+                        View diveder = (View)getLayoutInflater().inflate(R.layout.diveder, null);
+                        TableRow row= (TableRow)getLayoutInflater().inflate(R.layout.tableow_statd, null);
+                        LinearLayout vertLinearLay = new LinearLayout(this);
+                        vertLinearLay.setOrientation(LinearLayout.VERTICAL);
+                        vertLinearLay.addView(diveder);
+
+                        //порядковый номер
+                        TextView txtsample1 = (TextView) getLayoutInflater().inflate(R.layout.tableow_tx1, null);
+                        txtsample1.setText(String.valueOf(i1)+".");
+                        //имя
+                        TextView txtsample2 = (TextView) getLayoutInflater().inflate(R.layout.tableow_tx2, null);
+                        txtsample2.setText(surname);
+                        //параметр с размерностью
+                        TextView txtsample3 = (TextView) getLayoutInflater().inflate(R.layout.tableow_tx3, null);
+                        double newDouble = new BigDecimal(0.065*i1).setScale(2, RoundingMode.UP).doubleValue();
+                        txtsample3.setText(String.valueOf(movement_time) + " ms");
+                        //Разряд
+                        TextView txtsample4 = (TextView) getLayoutInflater().inflate(R.layout.tableow_tx4, null);
+                        txtsample4.setText("МС");
+                        // Флаг
+                        TextView txtsample5 = (TextView) getLayoutInflater().inflate(R.layout.tableow_tx5, null);
+                        //находим по строке ресурс
+                        Context context = txtsample5.getContext();
+                        int id_drawble_flag = context.getResources().getIdentifier("flag_"+Flag.toLowerCase(), "drawable", context.getPackageName());
+
+
+                        txtsample5.setBackgroundResource(id_drawble_flag);
+
+                        row.addView(txtsample1);
+                        row.addView(txtsample2);
+                        row.addView(txtsample3);
+                        row.addView(txtsample5);
+                        row.addView(txtsample4);
+
+                        tb.addView(row);
+                        tb.addView(vertLinearLay);
+                        vertLinearLay.setLayoutParams(paramsDiveder);
+
+                        //корректировки размеров после опеделения объекта на экране
+                        ViewGroup.LayoutParams params = txtsample5.getLayoutParams();
+                        params.height = getmarginDP(this, 18);
+                        params.width = getmarginDP(this, 22);
+                        txtsample5.setLayoutParams(params);
+
+            i1++;
 
         }
 
 
-        for (int i1 = 1; i1 < 37; i1++) {
 
-
-
-            View diveder = (View)getLayoutInflater().inflate(R.layout.diveder, null);
-            TableRow row= (TableRow)getLayoutInflater().inflate(R.layout.tableow_statd, null);
-            LinearLayout vertLinearLay = new LinearLayout(this);
-            vertLinearLay.setOrientation(LinearLayout.VERTICAL);
-
-            vertLinearLay.addView(diveder);
-
-
-
-            TextView txtsample1 = (TextView) getLayoutInflater().inflate(R.layout.tableow_tx1, null);
-            txtsample1.setText(String.valueOf(i1)+".");
-
-
-            TextView txtsample2 = (TextView) getLayoutInflater().inflate(R.layout.tableow_tx2, null);
-            txtsample2.setText("Mister I. A.");
-
-
-
-            TextView txtsample3 = (TextView) getLayoutInflater().inflate(R.layout.tableow_tx3, null);
-            double newDouble = new BigDecimal(0.065*i1).setScale(2, RoundingMode.UP).doubleValue();
-            txtsample3.setText(String.valueOf(newDouble) + " ms");
-
-
-
-            TextView txtsample4 = (TextView) getLayoutInflater().inflate(R.layout.tableow_tx4, null);
-            txtsample4.setText("МС");
-
-            TextView txtsample5 = (TextView) getLayoutInflater().inflate(R.layout.tableow_tx5, null);
-
-
-
-            //txtsample4.setText("МС");
-
-            row.addView(txtsample1);
-            row.addView(txtsample2);
-            row.addView(txtsample3);
-            row.addView(txtsample5);
-            row.addView(txtsample4);
-
-
-            tb.addView(row);
-            tb.addView(vertLinearLay);
-            vertLinearLay.setLayoutParams(paramsDiveder);
-
-
-            ViewGroup.LayoutParams params = txtsample5.getLayoutParams();
-            params.height = getmarginDP(this, 18);
-            params.width = getmarginDP(this, 22);
-            txtsample5.setLayoutParams(params);
-            //txtsample5.requestLayout();
-           /* txtsample5.getLayoutParams().height =
-            txtsample5.getLayoutParams().width =
-            */
-
-        }
     }
 
 
@@ -417,6 +396,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //        RestTask task = new RestTask(getActivity(), ACTION_FOR_INTENT_CALLBACK);
+
+
+
         prBar = (ProgressBar)findViewById(R.id.progressBar);
         prBar.setVisibility(ProgressBar.VISIBLE);
 // запускаем длительную операцию
@@ -432,6 +414,8 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setSubtitle("Successful connected");
+        toolbar.setSubtitleTextColor(Color.parseColor("#000999"));
         NubersOfRepeat = (TextView) findViewById(R.id.textView_RepeatNumbers);
         InitListLayoit();
 
