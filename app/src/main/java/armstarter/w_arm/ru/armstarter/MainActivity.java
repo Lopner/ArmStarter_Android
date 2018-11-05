@@ -1,8 +1,12 @@
 package armstarter.w_arm.ru.armstarter;
 
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
@@ -75,6 +79,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -88,6 +93,108 @@ public class MainActivity extends AppCompatActivity
     SeekBar sk;
     public static final String HTTP_RESPONSE = "HTTP_RESPONSE";
     List<Map<String, String>> RatingOfPeople = new ArrayList<>();
+
+
+
+
+
+    MyBluetoothReceivesClass MyBluetooth;
+
+
+
+//    //BluetoothAdapter EXTRA STATE
+//    /*
+//        public static final String EXTRA_STATE:
+//        Used as an int extra field in ACTION_STATE_CHANGED intents to request the current power state.
+//        Possible values are: STATE_OFF, STATE_TURNING_ON, STATE_ON, STATE_TURNING_OFF
+//    */
+//    private final BroadcastReceiver mBroadcastReceiver1 = new BroadcastReceiver() {
+//
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            final String action = intent.getAction();
+//
+//            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+//                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+//                switch(state) {
+//                    case BluetoothAdapter.STATE_OFF:
+//                    //..
+//                        break;
+//                    case BluetoothAdapter.STATE_TURNING_OFF:
+//                        //..
+//                        break;
+//                    case BluetoothAdapter.STATE_ON:
+//                        //..
+//                        break;
+//                    case BluetoothAdapter.STATE_TURNING_ON:
+//                        //..
+//                        break;
+//                }
+//
+//            }
+//        }
+//    };
+//
+//
+//    // extra scan
+//    /*
+//        public static final String EXTRA_SCAN_MODE:
+//        Used as an int extra field in ACTION_SCAN_MODE_CHANGED intents to request the current scan mode.
+//        Possible values are: SCAN_MODE_NONE, SCAN_MODE_CONNECTABLE, SCAN_MODE_CONNECTABLE_DISCOVERABLE
+//    */
+//    private final BroadcastReceiver mBroadcastReceiver2 = new BroadcastReceiver() {
+//
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            final String action = intent.getAction();
+//
+//            if(action.equals(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED)) {
+//
+//                int mode = intent.getIntExtra(BluetoothAdapter.EXTRA_SCAN_MODE, BluetoothAdapter.ERROR);
+//
+//                switch(mode){
+//                    case BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE:
+//                    //..
+//                        break;
+//                    case BluetoothAdapter.SCAN_MODE_CONNECTABLE:
+//                    //..
+//                        break;
+//                    case BluetoothAdapter.SCAN_MODE_NONE:
+//                    //..
+//                        break;
+//                }
+//            }
+//        }
+//    };
+//
+//    /*
+//        ACTION_ACL_CONNECTED
+//        added in API level 5
+//        public static final String ACTION_ACL_CONNECTED
+//        Broadcast Action: Indicates a low level (ACL) connection has been established with a remote device.
+//        Always contains the extra field EXTRA_DEVICE.
+//        ACL connections are managed automatically by the Android Bluetooth stack.
+//        Requires Manifest.permission.BLUETOOTH to receive.
+//        Constant Value: "android.bluetooth.device.action.ACL_CONNECTED"
+//    */
+//    private final BroadcastReceiver mBroadcastReceiver3 = new BroadcastReceiver() {
+//
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            String action = intent.getAction();
+//
+//            switch (action){
+//                case BluetoothDevice.ACTION_ACL_CONNECTED:
+//                    //..
+//                    break;
+//                case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+//                    //..
+//                    break;
+//            }
+//        }
+//    };
+
+
 
     void InitListLayoit(){
         ListLayout = new ArrayList();
@@ -129,23 +236,6 @@ public class MainActivity extends AppCompatActivity
     {
         private String mAction;
         private Context mContext;
-      //  private HttpClient mClient;
-       // private String mAction;
-
-
-//        public RestTask(Context context, String action)
-//        {
-//            mContext = context;
-//            mAction = action;
-//            mClient = new DefaultHttpClient();
-//        }
-//
-//        public RestTask(Context context, String action, HttpClient client)
-//        {
-//            mContext = context;
-//            mAction = action;
-//            mClient = client;
-//        }
 
         @Override
         protected void onPreExecute() {
@@ -391,6 +481,50 @@ public class MainActivity extends AppCompatActivity
 
 
 
+    /*Bluetooth voids*/
+    private BluetoothAdapter BA;
+    private Set<BluetoothDevice> pairedDevices;
+    Toolbar toolbar;
+
+    public void B_list(){
+        pairedDevices = BA.getBondedDevices();
+
+        ArrayList list = new ArrayList();
+
+        for(BluetoothDevice bt : pairedDevices){
+            list.add(bt.getName());
+        }
+        Toast.makeText(getApplicationContext(), "Showing Paired Devices",Toast.LENGTH_SHORT).show();
+
+        //final ArrayAdapter adapter = new  ArrayAdapter(this,android.R.layout.simple_list_item_1, list);
+        //lv.setAdapter(adapter);
+    }
+
+    public void B_on(){
+        if (!BA.isEnabled()) {
+            Intent turnOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(turnOn, 0);
+
+            Toast.makeText(getApplicationContext(), "Turned on",Toast.LENGTH_LONG).show();
+        } else {
+
+            Toast.makeText(getApplicationContext(), "Already on", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void B_off(){
+        BA.disable();
+
+        Toast.makeText(getApplicationContext(), "Turned off" ,Toast.LENGTH_LONG).show();
+    }
+
+    public  void B_visible(){
+        Intent getVisible = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        startActivityForResult(getVisible, 0);
+    }
+    /* end of Bluetooth voids*/
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -401,21 +535,42 @@ public class MainActivity extends AppCompatActivity
 
         prBar = (ProgressBar)findViewById(R.id.progressBar);
         prBar.setVisibility(ProgressBar.VISIBLE);
-// запускаем длительную операцию
 
+        BA = BluetoothAdapter.getDefaultAdapter();
+
+        MyBluetooth = new MyBluetoothReceivesClass(this);
+
+            //extra state
+            IntentFilter filter_state = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+            registerReceiver(MyBluetooth.Bluetooth_state, filter_state);
+
+            //extra scan
+            IntentFilter filter_scan = new IntentFilter();
+            filter_scan.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+            filter_scan.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+            filter_scan.addAction(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
+            registerReceiver(MyBluetooth.Bluetooth_scan, filter_scan);
+
+            //acl
+            IntentFilter filter_acl = new IntentFilter();
+            filter_acl.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+            filter_acl.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+            filter_acl.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
+            registerReceiver(MyBluetooth.Bluetooth_acl, filter_acl);
+
+
+       // *возвращает на эмуляторе null, надо тестировать на реальном устройстве
+        B_on();
+        B_visible();
+        B_list();
+        // запускаем длительную операцию
         new MyDownloadTask().execute();
-//        progress = ProgressDialog.show(getActivity(), "Getting Data ...", "Waiting For Results...", true);
 
-
-//        https://alvinalexander.com/android/asynctask-examples-parameters-callbacks-executing-canceling
-//        https://alvinalexander.com/android/android-asynctask-http-client-rest-example-tutorial
-
-
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setSubtitle("Successful connected");
         toolbar.setSubtitleTextColor(Color.parseColor("#000999"));
+        toolbar.setSubtitle("Turned on");
+
         NubersOfRepeat = (TextView) findViewById(R.id.textView_RepeatNumbers);
         InitListLayoit();
 
@@ -549,28 +704,6 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        sk=(SeekBar) findViewById(R.id.seekBar);
-        sk.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
-                int my_progress = sk.getProgress();
-                NubersOfRepeat.setText(Integer.toString(my_progress));
-            }
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
-                // TODO Auto-generated method stub
-
-               // Toast.makeText(getApplicationContext(), String.valueOf(progress),Toast.LENGTH_LONG).show();
-
-            }
-        });
 
 
 
@@ -578,7 +711,13 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(MyBluetooth.Bluetooth_acl);
+        unregisterReceiver(MyBluetooth.Bluetooth_scan);
+        unregisterReceiver(MyBluetooth.Bluetooth_state);
+    }
 
     @Override
     public void onBackPressed() {
