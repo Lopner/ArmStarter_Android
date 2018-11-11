@@ -1,18 +1,37 @@
 package armstarter.w_arm.ru.armstarter;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 public class MyBluetoothReceivesClass {
+    private final static int REQUEST_ENABLE_BT = 1;
+    private final static String ARM_DEVICE_BT = "ARMSCORER";
+
     private Context MainContext;
+
     B_STATE Bluetooth_state;
     B_SCAN Bluetooth_scan;
     B_ACL Bluetooth_acl;
+    List<String> mArrayAdapter;
 
+    /*
+    BluetoothAdapter
+    отвечает за работу с установленным в телефоне Bluetooth модулем. Экземпляр этого класса есть в любой программе, использующей bluetooth.
+    В состав этого класса входят методы, позволяющие производить поиск доступных устройств, запрашивать список подключенных устройств, создавать экземпляр класса
+    BluetoothDevice на основании известного MAC адреса и создавать BluetoothServerSocket для ожидания запроса на соединение от других устройств.
+    */
+    BluetoothAdapter bluetoothAdapter;
     //**********************************************************************************************
     // вложенные классы
     //**********************************************************************************************
@@ -35,6 +54,9 @@ public class MyBluetoothReceivesClass {
                         break;
                     case BluetoothAdapter.STATE_ON:
                         Toast.makeText(MainContext, "STATE - STATE_ON",Toast.LENGTH_SHORT).show();
+
+                        createBluetoothAdapter();
+
                         break;
                     case BluetoothAdapter.STATE_TURNING_ON:
                         Toast.makeText(MainContext, "STATE - STATE_TURNING_ON",Toast.LENGTH_SHORT).show();
@@ -105,14 +127,114 @@ public class MyBluetoothReceivesClass {
     //**********************************************************************************************
 
     //конструктор вызываемого класса в программе
+    // регистрация различных bluetooth приемников
     MyBluetoothReceivesClass(Context mContext) {
+        //получаем контекс главного приложения
         MainContext = mContext;
+
+        //******************************************************************************************
+        //Регистрируем приемники в контексте главного приложения
+
+        //extra state
         Bluetooth_state = new B_STATE();
+        IntentFilter filter_state = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        MainContext.registerReceiver(Bluetooth_state, filter_state);
+
+        //extra scan
         Bluetooth_scan = new B_SCAN();
+        IntentFilter filter_scan = new IntentFilter();
+        filter_scan.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        filter_scan.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        filter_scan.addAction(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
+        MainContext.registerReceiver(Bluetooth_scan, filter_scan);
+
+        //acl
         Bluetooth_acl = new B_ACL();
+        IntentFilter filter_acl = new IntentFilter();
+        filter_acl.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+        filter_acl.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+        filter_acl.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
+        MainContext.registerReceiver(Bluetooth_acl, filter_acl);
+
+        //end
+        //******************************************************************************************
+
+
     }
 
 
+    protected void createBluetoothAdapter(){
+        //******************************************************************************************
+        //http://www.mobilab.ru/androiddev/bluetoothinandroid.html
+        // создаем блютуз соединение
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        // Проверяем существует ли Bluetooth на устройстве
+        if(bluetoothAdapter!=null)
+        {
+            // С Bluetooth все в порядке.
+
+
+
+            String status;
+
+
+            //проверяем вклюен ли на устройсве bluetooth
+            if (bluetoothAdapter.isEnabled()) {
+                // Bluetooth включен. Работаем.
+
+
+                // в качестве теста выводим наименование устройства и его MAC адрес
+                String mydeviceaddress = bluetoothAdapter.getAddress();
+                String mydevicename = bluetoothAdapter.getName();
+                status = mydevicename+" : "+ mydeviceaddress;
+                Toast.makeText(MainContext, status,Toast.LENGTH_SHORT).show();
+
+
+
+                    mArrayAdapter = new ArrayList<String>();
+
+                    Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
+                    // Если список спаренных устройств не пуст
+                    if( pairedDevices.size()>0 ){
+                    // проходимся в цикле по этому списку
+                        for(BluetoothDevice device: pairedDevices){
+                            // Добавляем имена и адреса в mArrayAdapter, чтобы показать
+                            mArrayAdapter.add(device.getName()+"\n"+ device.getAddress());
+
+                            if (ARM_DEVICE_BT == device.getName()){
+                                //нашли наше устройство
+                                break;
+                            }
+                        }
+                    }
+            }
+            else
+            {
+                // Bluetooth выключен. Предложим пользователю включить его.
+                // Если пользователь согласился на включение адаптера, в переменную enableBtIntent
+                // будет записано значение RESULT_OK. В противном случае - RESULT_CANCELED.
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                //warning, maybe memory leaks?
+                ((Activity) MainContext).startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+
+            }
+
+        }
+    }
+
+
+    protected List<String> ReturnSavedBeforeDevices(){
+        return mArrayAdapter;
+    }
+
+    // при закрытии приложения обязательно вызвать у созданного объекта данный метод, чтоб разрегестрировать приемники
+    protected void    close(){
+        MainContext.unregisterReceiver(Bluetooth_acl);
+        MainContext.unregisterReceiver(Bluetooth_scan);
+        MainContext.unregisterReceiver(Bluetooth_state);
+        mArrayAdapter.clear();
+    }
 
 
 }

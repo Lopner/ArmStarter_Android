@@ -540,24 +540,6 @@ public class MainActivity extends AppCompatActivity
 
         MyBluetooth = new MyBluetoothReceivesClass(this);
 
-            //extra state
-            IntentFilter filter_state = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-            registerReceiver(MyBluetooth.Bluetooth_state, filter_state);
-
-            //extra scan
-            IntentFilter filter_scan = new IntentFilter();
-            filter_scan.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
-            filter_scan.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-            filter_scan.addAction(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
-            registerReceiver(MyBluetooth.Bluetooth_scan, filter_scan);
-
-            //acl
-            IntentFilter filter_acl = new IntentFilter();
-            filter_acl.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
-            filter_acl.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
-            filter_acl.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
-            registerReceiver(MyBluetooth.Bluetooth_acl, filter_acl);
-
 
        // *возвращает на эмуляторе null, надо тестировать на реальном устройстве
         B_on();
@@ -714,9 +696,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MyBluetooth.close();
+
+        /*
         unregisterReceiver(MyBluetooth.Bluetooth_acl);
         unregisterReceiver(MyBluetooth.Bluetooth_scan);
         unregisterReceiver(MyBluetooth.Bluetooth_state);
+        */
     }
 
     @Override
@@ -769,6 +755,12 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
             SetOnlyOneLayoutVisible(R.id.main_setting);
         } else if (id == R.id.nav_about) {
+
+
+            // only for test functionality
+
+            List<String> connectedArr = MyBluetooth.ReturnSavedBeforeDevices();
+
             SetOnlyOneLayoutVisible(R.id.main_about);
         } else if (id == R.id.nav_exit) {
             goExit();
