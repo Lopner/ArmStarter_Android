@@ -95,104 +95,7 @@ public class MainActivity extends AppCompatActivity
     List<Map<String, String>> RatingOfPeople = new ArrayList<>();
 
 
-
-
-
     MyBluetoothReceivesClass MyBluetooth;
-
-
-
-//    //BluetoothAdapter EXTRA STATE
-//    /*
-//        public static final String EXTRA_STATE:
-//        Used as an int extra field in ACTION_STATE_CHANGED intents to request the current power state.
-//        Possible values are: STATE_OFF, STATE_TURNING_ON, STATE_ON, STATE_TURNING_OFF
-//    */
-//    private final BroadcastReceiver mBroadcastReceiver1 = new BroadcastReceiver() {
-//
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            final String action = intent.getAction();
-//
-//            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
-//                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-//                switch(state) {
-//                    case BluetoothAdapter.STATE_OFF:
-//                    //..
-//                        break;
-//                    case BluetoothAdapter.STATE_TURNING_OFF:
-//                        //..
-//                        break;
-//                    case BluetoothAdapter.STATE_ON:
-//                        //..
-//                        break;
-//                    case BluetoothAdapter.STATE_TURNING_ON:
-//                        //..
-//                        break;
-//                }
-//
-//            }
-//        }
-//    };
-//
-//
-//    // extra scan
-//    /*
-//        public static final String EXTRA_SCAN_MODE:
-//        Used as an int extra field in ACTION_SCAN_MODE_CHANGED intents to request the current scan mode.
-//        Possible values are: SCAN_MODE_NONE, SCAN_MODE_CONNECTABLE, SCAN_MODE_CONNECTABLE_DISCOVERABLE
-//    */
-//    private final BroadcastReceiver mBroadcastReceiver2 = new BroadcastReceiver() {
-//
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            final String action = intent.getAction();
-//
-//            if(action.equals(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED)) {
-//
-//                int mode = intent.getIntExtra(BluetoothAdapter.EXTRA_SCAN_MODE, BluetoothAdapter.ERROR);
-//
-//                switch(mode){
-//                    case BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE:
-//                    //..
-//                        break;
-//                    case BluetoothAdapter.SCAN_MODE_CONNECTABLE:
-//                    //..
-//                        break;
-//                    case BluetoothAdapter.SCAN_MODE_NONE:
-//                    //..
-//                        break;
-//                }
-//            }
-//        }
-//    };
-//
-//    /*
-//        ACTION_ACL_CONNECTED
-//        added in API level 5
-//        public static final String ACTION_ACL_CONNECTED
-//        Broadcast Action: Indicates a low level (ACL) connection has been established with a remote device.
-//        Always contains the extra field EXTRA_DEVICE.
-//        ACL connections are managed automatically by the Android Bluetooth stack.
-//        Requires Manifest.permission.BLUETOOTH to receive.
-//        Constant Value: "android.bluetooth.device.action.ACL_CONNECTED"
-//    */
-//    private final BroadcastReceiver mBroadcastReceiver3 = new BroadcastReceiver() {
-//
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            String action = intent.getAction();
-//
-//            switch (action){
-//                case BluetoothDevice.ACTION_ACL_CONNECTED:
-//                    //..
-//                    break;
-//                case BluetoothDevice.ACTION_ACL_DISCONNECTED:
-//                    //..
-//                    break;
-//            }
-//        }
-//    };
 
 
 
@@ -399,7 +302,18 @@ public class MainActivity extends AppCompatActivity
 
                 while(temp2_keys.hasNext()) {
                     String key_2 = temp2_keys.next();
-                    String param = (String)j_value.get(key_2) ;
+                    // проверяем тип
+                    String param;
+                    if (j_value.get(key_2) instanceof String){
+                         param = (String)j_value.get(key_2);
+                    }else if(j_value.get(key_2) instanceof Integer){
+                        Integer pInt = j_value.getInt(key_2);
+                        param = Integer.toString(pInt);
+                    }else{
+                        param = "error";
+                    }
+
+
                     LineStr.put(key_2, param);
 
 

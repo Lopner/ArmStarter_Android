@@ -3,20 +3,28 @@ package armstarter.w_arm.ru.armstarter;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class MyBluetoothReceivesClass {
     private final static int REQUEST_ENABLE_BT = 1;
     private final static String ARM_DEVICE_BT = "ARMSCORER";
+    private final static String LOG_ARM_DEBUG = "arm_debug";
 
     private Context MainContext;
 
@@ -47,18 +55,23 @@ public class MyBluetoothReceivesClass {
                 final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
                 switch (state) {
                     case BluetoothAdapter.STATE_OFF:
+                        Log.d(LOG_ARM_DEBUG, "STATE - STATE_OFF");
                         Toast.makeText(MainContext, "STATE - STATE_OFF",Toast.LENGTH_SHORT).show();
                         break;
                     case BluetoothAdapter.STATE_TURNING_OFF:
+                        Log.d(LOG_ARM_DEBUG, "STATE - STATE_TURNING_OFF");
                         Toast.makeText(MainContext, "STATE - STATE_TURNING_OFF",Toast.LENGTH_SHORT).show();
                         break;
                     case BluetoothAdapter.STATE_ON:
+                        Log.d(LOG_ARM_DEBUG, "STATE - STATE_ON");
                         Toast.makeText(MainContext, "STATE - STATE_ON",Toast.LENGTH_SHORT).show();
 
+                        Log.d(LOG_ARM_DEBUG, "Создаем createBluetoothAdapter()");
                         createBluetoothAdapter();
 
                         break;
                     case BluetoothAdapter.STATE_TURNING_ON:
+                        Log.d(LOG_ARM_DEBUG, "STATE - STATE_TURNING_ON");
                         Toast.makeText(MainContext, "STATE - STATE_TURNING_ON",Toast.LENGTH_SHORT).show();
                         break;
                 }
@@ -83,12 +96,19 @@ public class MyBluetoothReceivesClass {
 
                 switch (mode) {
                     case BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE:
+                        Log.d(LOG_ARM_DEBUG, "SCAN - SCAN_MODE_CONNECTABLE_DISCOVERABLE");
                         Toast.makeText(MainContext, "SCAN - SCAN_MODE_CONNECTABLE_DISCOVERABLE",Toast.LENGTH_SHORT).show();
+
+                        Log.d(LOG_ARM_DEBUG, "Создаем createBluetoothAdapter()");
+                        createBluetoothAdapter();
+
                         break;
                     case BluetoothAdapter.SCAN_MODE_CONNECTABLE:
+                        Log.d(LOG_ARM_DEBUG, "SCAN - SCAN_MODE_CONNECTABLE");
                         Toast.makeText(MainContext, "SCAN - SCAN_MODE_CONNECTABLE",Toast.LENGTH_SHORT).show();
                         break;
                     case BluetoothAdapter.SCAN_MODE_NONE:
+                        Log.d(LOG_ARM_DEBUG, "SCAN - SCAN_MODE_NONE");
                         Toast.makeText(MainContext, "SCAN - SCAN_MODE_NONE",Toast.LENGTH_SHORT).show();
                         break;
                 }
@@ -109,12 +129,15 @@ public class MyBluetoothReceivesClass {
 
             switch (action){
                 case BluetoothDevice.ACTION_ACL_CONNECTED:
+                    Log.d(LOG_ARM_DEBUG, "ACL - ACTION_ACL_CONNECTED");
                     Toast.makeText(MainContext, "ACL - ACTION_ACL_CONNECTED",Toast.LENGTH_SHORT).show();
                     break;
                 case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+                    Log.d(LOG_ARM_DEBUG, "ACL - ACTION_ACL_DISCONNECTED");
                     Toast.makeText(MainContext, "ACL - ACTION_ACL_DISCONNECTED",Toast.LENGTH_SHORT).show();
                     break;
                 case BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED:
+                    Log.d(LOG_ARM_DEBUG, "ACL - ACTION_ACL_DISCONNECT_REQUESTED");
                     Toast.makeText(MainContext, "ACL - ACTION_ACL_DISCONNECT_REQUESTED",Toast.LENGTH_SHORT).show();
                     break;
             }
@@ -166,14 +189,15 @@ public class MyBluetoothReceivesClass {
     protected void createBluetoothAdapter(){
         //******************************************************************************************
         //http://www.mobilab.ru/androiddev/bluetoothinandroid.html
-        // создаем блютуз соединение
+        // создаем блютуз
+        Log.d(LOG_ARM_DEBUG, "создаем блютуз соединение");
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         // Проверяем существует ли Bluetooth на устройстве
         if(bluetoothAdapter!=null)
         {
             // С Bluetooth все в порядке.
-
+            Log.d(LOG_ARM_DEBUG, "С Bluetooth все в порядке");
 
 
             String status;
@@ -182,7 +206,7 @@ public class MyBluetoothReceivesClass {
             //проверяем вклюен ли на устройсве bluetooth
             if (bluetoothAdapter.isEnabled()) {
                 // Bluetooth включен. Работаем.
-
+                Log.d(LOG_ARM_DEBUG, "Bluetooth включен. Работаем.");
 
                 // в качестве теста выводим наименование устройства и его MAC адрес
                 String mydeviceaddress = bluetoothAdapter.getAddress();
@@ -196,6 +220,7 @@ public class MyBluetoothReceivesClass {
 
                     Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
                     // Если список спаренных устройств не пуст
+                    Log.d(LOG_ARM_DEBUG, "Если список спаренных устройств не пуст pairedDevices.size() ="+pairedDevices.size());
                     if( pairedDevices.size()>0 ){
                     // проходимся в цикле по этому списку
                         for(BluetoothDevice device: pairedDevices){
@@ -204,6 +229,10 @@ public class MyBluetoothReceivesClass {
 
                             if (ARM_DEVICE_BT == device.getName()){
                                 //нашли наше устройство
+
+                                AcceptThread newthread = new AcceptThread(bluetoothAdapter, "0000-0000-0000-0000");
+                                newthread.start();
+
                                 break;
                             }
                         }
@@ -237,4 +266,131 @@ public class MyBluetoothReceivesClass {
     }
 
 
+
+
+    private class AcceptThread extends Thread{
+
+    private final BluetoothServerSocket mmServerSocket;
+    private final String NAME = "MyDevice";
+    private UUID MY_UUID;
+
+        public AcceptThread(BluetoothAdapter mBluetoothAdapter, String str_uid){
+
+
+            MY_UUID = UUID.nameUUIDFromBytes(str_uid.getBytes());
+
+                    // используем вспомогательную переменную, которую в дальнейшем
+                    // свяжем с mmServerSocket,
+                BluetoothServerSocket tmp=null;
+                try{
+                    // MY_UUID это UUID нашего приложения, это же значение
+                    // используется в клиентском приложении
+                    tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(NAME, MY_UUID);//String: service name for SDP record, UUID: uuid for SDP record
+                } catch(IOException e){
+
+                }
+                mmServerSocket= tmp;
+        }
+
+        public void run(){
+            BluetoothSocket socket=null;
+            // ждем пока не произойдет ошибка или не
+            // будет возвращен сокет
+            while(true){
+                try{
+                    socket= mmServerSocket.accept();
+                } catch(IOException e){
+                    break;
+                }
+                 // если соединение было подтверждено
+                if(socket!=null){
+                 // управлчем соединением (в отдельном потоке)
+                    manageConnectedSocket(socket);
+                    try{
+                        mmServerSocket.close();
+                    } catch(IOException e){
+
+
+                    }
+                    break;
+                }
+            }
+        }
+
+
+
+        public void manageConnectedSocket(BluetoothSocket bt_socket){
+            ConnectedThread ConThread = new ConnectedThread(bt_socket);
+            ConThread.start();
+        }
+
+    /** отмена ожидания сокета */
+        public void cancel(){
+            try{
+                mmServerSocket.close();
+            } catch(IOException e){
+
+            }
+        }
+    }
+
+
+    //класс для чтнеия и записи данных между установленым соединением на устройствах
+    private class ConnectedThread extends Thread {
+        private final BluetoothSocket mmSocket;
+        private final InputStream mmInStream;
+        private final OutputStream mmOutStream;
+
+        public ConnectedThread(BluetoothSocket socket) {
+            mmSocket = socket;
+            InputStream tmpIn = null;
+            OutputStream tmpOut = null;
+            Toast.makeText(MainContext, "Чтение и запись данных 01",Toast.LENGTH_SHORT).show();
+            // Получить входящий и исходящий потоки данных
+            try {
+                tmpIn = socket.getInputStream();
+                tmpOut = socket.getOutputStream();
+            } catch (IOException e) {
+            }
+
+            mmInStream = tmpIn;
+            mmOutStream = tmpOut;
+        }
+
+        public void run() {
+            byte[] buffer = new byte[1024];// буферный массив
+            int bytes;// bytes returned from read()
+
+            // Прослушиваем InputStream пока не произойдет исключение
+            while (true) {
+                try {// читаем из InputStream
+                    bytes = mmInStream.read(buffer);
+                    // посылаем прочитанные байты главной деятельности
+                 /*   mHandler.obtainMessage(MESSAGE_READ, bytes,-1, buffer)
+                            .sendToTarget();*/
+                } catch (IOException e) {
+                    break;
+                }
+            }
+        }
+
+        /* Вызываем этот метод из главной деятельности, чтобы отправить данные
+        удаленному устройству */
+        public void write(byte[] bytes) {
+            try {
+                mmOutStream.write(bytes);
+            } catch (IOException e) {
+            }
+        }
+
+        /* Вызываем этот метод из главной деятельности,
+        чтобы разорвать соединение */
+        public void cancel() {
+            try {
+                mmSocket.close();
+            } catch (IOException e) {
+            }
+        }
+
+    }
 }
