@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.bluetooth.le.BluetoothLeScanner;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +24,7 @@ import java.util.UUID;
 
 public class MyBluetoothReceivesClass {
     private final static int REQUEST_ENABLE_BT = 1;
-    private final static String ARM_DEVICE_BT = "ARMSCORER";
+    private final static String ARM_DEVICE_BT = "MONSTER-PC";
     private final static String LOG_ARM_DEBUG = "arm_debug";
 
     private Context MainContext;
@@ -113,6 +114,29 @@ public class MyBluetoothReceivesClass {
                         break;
                 }
             }
+
+
+
+            if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_STARTED)) {
+                Log.e(LOG_ARM_DEBUG, "Обработчик сканирование работает");
+
+            }
+
+
+            if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)) {
+                Log.e(LOG_ARM_DEBUG, "Сканирование завершено");
+            }
+
+            if (action.equals(BluetoothDevice.ACTION_FOUND)) {
+                Log.e(LOG_ARM_DEBUG, "Найдено устройство");
+                // Get the BluetoothDevice object from the Intent
+               // BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                // Add the name and address to an array adapter to show in a ListView
+               // Log.e(LOG_ARM_DEBUG,device.getName() + " " + device.getAddress());
+               // deviceListAdapter.add(device.getName() + "\n" + device.getAddress());
+            }
+
+
         }
 
     }
@@ -166,6 +190,8 @@ public class MyBluetoothReceivesClass {
         //extra scan
         Bluetooth_scan = new B_SCAN();
         IntentFilter filter_scan = new IntentFilter();
+        filter_scan.addAction(BluetoothDevice.ACTION_FOUND);
+        filter_scan.addAction(BluetoothDevice.ACTION_NAME_CHANGED);
         filter_scan.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
         filter_scan.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         filter_scan.addAction(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
@@ -185,6 +211,24 @@ public class MyBluetoothReceivesClass {
 
     }
 
+/*
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_COARSE_LOCATION: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    proceedDiscovery(); // --->
+                } else {
+                    //TODO re-request
+                }
+                break;
+            }
+        }
+
+
+*/
 
     protected void createBluetoothAdapter(){
         //******************************************************************************************
@@ -220,23 +264,45 @@ public class MyBluetoothReceivesClass {
 
                     Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
                     // Если список спаренных устройств не пуст
-                    Log.d(LOG_ARM_DEBUG, "Если список спаренных устройств не пуст pairedDevices.size() ="+pairedDevices.size());
+                    Log.d(LOG_ARM_DEBUG, "Если список спаренных устройств не пуст -  pairedDevices.size() ="+pairedDevices.size());
+
+                    boolean ThreadIsWorked  = false; // признак найденного устройства, с которым хотим соединитья
+
                     if( pairedDevices.size()>0 ){
                     // проходимся в цикле по этому списку
                         for(BluetoothDevice device: pairedDevices){
                             // Добавляем имена и адреса в mArrayAdapter, чтобы показать
                             mArrayAdapter.add(device.getName()+"\n"+ device.getAddress());
-
+                            Log.d(LOG_ARM_DEBUG, device.getName());
                             if (ARM_DEVICE_BT == device.getName()){
                                 //нашли наше устройство
-
+                                ThreadIsWorked = true;
                                 AcceptThread newthread = new AcceptThread(bluetoothAdapter, "0000-0000-0000-0000");
                                 newthread.start();
 
                                 break;
                             }
                         }
+
                     }
+
+                    // если искомое устройство раньше не коммутировалось, то производим поиск
+                    if (!ThreadIsWorked){
+                        if (bluetoothAdapter != null) {
+
+                            if (bluetoothAdapter.isDiscovering()) {
+                                bluetoothAdapter.cancelDiscovery();
+                            }
+                            bluetoothAdapter.startDiscovery();
+                            Log.e(LOG_ARM_DEBUG, "начинаем сканирование ");
+
+                        }
+                    } else {
+                        Log.e(LOG_ARM_DEBUG, "BluetoothAdapter is null");
+                    }
+
+
+
             }
             else
             {
