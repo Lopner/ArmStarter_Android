@@ -130,10 +130,28 @@ public class MyBluetoothReceivesClass {
             if (action.equals(BluetoothDevice.ACTION_FOUND)) {
                 Log.e(LOG_ARM_DEBUG, "Найдено устройство");
                 // Get the BluetoothDevice object from the Intent
-               // BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // Add the name and address to an array adapter to show in a ListView
-               // Log.e(LOG_ARM_DEBUG,device.getName() + " " + device.getAddress());
+                Log.e(LOG_ARM_DEBUG,device.getName() + " " + device.getAddress());
                // deviceListAdapter.add(device.getName() + "\n" + device.getAddress());
+
+                //если мы нашди то что искали, то пытаемся настроить связь с этим устройсвом
+                String bName = "MONSTER-PC";
+                String bMac = "00:1A:7D:DA:71:13";
+                String sUID = "00001101-0000-1000-8000-00805F9B34FB";
+                Log.e(LOG_ARM_DEBUG, "Тест кода");
+                if (device.getName().equals(bName)  && device.getAddress().equals(bMac)){
+                    bluetoothAdapter.cancelDiscovery();
+
+
+                    Log.e(LOG_ARM_DEBUG, "Создаем сокет на клиенте");
+                    AcceptThread newthread = new AcceptThread(device, sUID);
+                    newthread.start();
+
+
+                }
+
+
             }
 
 
@@ -336,9 +354,35 @@ public class MyBluetoothReceivesClass {
 
     private class AcceptThread extends Thread{
 
-    private final BluetoothServerSocket mmServerSocket;
-    private final String NAME = "MyDevice";
-    private UUID MY_UUID;
+        private BluetoothServerSocket mmServerSocket;
+        private BluetoothSocket mmSocket;
+        private final String NAME = "MyDevice";
+        private UUID MY_UUID;
+
+        public AcceptThread(BluetoothDevice device,String str_uid){
+
+
+            MY_UUID = UUID.nameUUIDFromBytes(str_uid.getBytes());
+
+            // используем вспомогательную переменную, которую в дальнейшем
+            // свяжем с mmServerSocket,
+            BluetoothSocket  tmp=null;
+
+
+
+            //чтобы прослушивать ожидание на подключение, используется
+            try{
+                // MY_UUID это UUID нашего приложения, это же значение
+                // используется в клиентском приложении
+
+                tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
+                Log.e(LOG_ARM_DEBUG, "Создание сокета 50%  - createRfcommSocketToServiceRecord");
+
+            } catch(IOException e){
+
+            }
+            mmSocket= tmp;
+        }
 
         public AcceptThread(BluetoothAdapter mBluetoothAdapter, String str_uid){
 
@@ -348,6 +392,10 @@ public class MyBluetoothReceivesClass {
                     // используем вспомогательную переменную, которую в дальнейшем
                     // свяжем с mmServerSocket,
                 BluetoothServerSocket tmp=null;
+
+
+
+                //чтобы прослушивать ожидание на подключение, используется
                 try{
                     // MY_UUID это UUID нашего приложения, это же значение
                     // используется в клиентском приложении

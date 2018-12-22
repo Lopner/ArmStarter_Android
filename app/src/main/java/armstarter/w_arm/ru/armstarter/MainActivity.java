@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.AppOpsManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -445,17 +446,34 @@ public class MainActivity extends AppCompatActivity
 
 
 
-//    protected void checkLocationPermission() {
-//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//
-//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001);
-//        }
-//    }
+
+
+/*
+    public static boolean hasPermission(Context context, String permission)
+    {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+            return true;
+
+        try
+        {
+            if (context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED)
+            {
+                String op = AppOpsManagerCompat.permissionToOp(permission);
+                return AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName())
+                        == AppOpsManagerCompat.MODE_ALLOWED;
+            } else
+                return false;
+        } catch (Exception e)
+        {
+            return false;
+        }
+    }
+*/
 
     public void checkBTPermissions(){
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP){
-            int permissionCheck = ActivityCompat.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION");
-            permissionCheck += ActivityCompat.checkSelfPermission("Manifest.permission.ACCESS_COARSE_LOCATION");
+            int permissionCheck = ActivityCompat.checkSelfPermission(this,"Manifest.permission.ACCESS_FINE_LOCATION");
+            permissionCheck += ActivityCompat.checkSelfPermission(this,"Manifest.permission.ACCESS_COARSE_LOCATION");
             if (permissionCheck != 0) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001);
             }
@@ -471,7 +489,7 @@ public class MainActivity extends AppCompatActivity
 //        RestTask task = new RestTask(getActivity(), ACTION_FOR_INTENT_CALLBACK);
 
 
-
+        // без этой проверки сканирование именно новых, не сопряженных усторйств не работает
         checkBTPermissions();
 
 
